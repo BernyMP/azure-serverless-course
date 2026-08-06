@@ -46,3 +46,19 @@ terraform.rc
 
 # macOS metadata
 .DS_Store
+
+# Azure Functions local settings — contains AzureWebJobsStorage
+# connection strings and account keys in plaintext. Never commit.
+local.settings.json
+
+# Local environment files
+.env
+.env.*
+
+# Build output and dependencies
+bin/
+obj/
+node_modules/
+__pycache__/
+.venv/
+venv/
