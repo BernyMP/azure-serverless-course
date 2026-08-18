@@ -14,7 +14,7 @@ resource "azurerm_service_plan" "my_plan" {
 // storage account name must be lowercase letters and numbers
 // for the back-end we initialized manually the storage account for the tfstate blob container 
 resource "azurerm_storage_account" "main" {
-  name = "${replace(var.project_name, "-", "")}${var.environment}sa"
+  name = "${replace(var.project_name, "-", "")}${var.environment}sa2"
   location = var.location
   account_replication_type = "LRS"
   account_tier = "Standard"
