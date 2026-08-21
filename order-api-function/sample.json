@@ -1,0 +1,16 @@
+{
+    "customerName": "John Doe",
+    "customerEmail": "john.doe@example.com",
+    "items": [
+        {
+            "itemId": "12345",
+            "quantity": 2
+        },
+        {
+            "itemId": "67890",
+            "quantity": 1
+        }
+    ],
+    "totalAmount": 69.97,
+    "orderDate": "2024-06-15T14:30:00Z"
+}
