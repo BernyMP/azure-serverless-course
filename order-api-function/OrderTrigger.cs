@@ -16,7 +16,7 @@ public class OrderTrigger
     }
 
     [Function("OrderTrigger")]
-    public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req)
+    public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
     {
         _logger.LogInformation("Processing of the Order has started.");
 
