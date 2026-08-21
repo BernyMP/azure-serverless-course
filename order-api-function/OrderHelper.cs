@@ -3,7 +3,6 @@ public static class OrderHelper
 {
     public static (bool IsValid, string Message) ValidateOrder(Order? order)
     {
-        Console.WriteLine("hello world");
         if (order == null)
             return (false, "Order is empty");
         
