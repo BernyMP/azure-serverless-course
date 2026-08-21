@@ -53,6 +53,23 @@ resource "azurerm_linux_function_app" "order-api-func" {
   https_only = true
 
   site_config {
+    // A Consumption plan bursts to 200 instances by default (that is what
+    // Azure reports for this app today), and each instance can run several
+    // executions at once. That elasticity is the whole point of serverless in
+    // production, but on a learning subscription it is also the blast radius:
+    // a function that loops, retries forever, or gets hit by a tight test loop
+    // can fan out to hundreds of billed workers before you notice.
+    //
+    // 5 is far more concurrency than a course exercise needs, and it turns a
+    // runaway function into a slow queue instead of a large invoice. Requests
+    // beyond that capacity are not dropped -- they wait.
+    //
+    // Under the hood this sets WEBSITE_MAX_DYNAMIC_APPLICATION_SCALE_OUT. Only
+    // Consumption and Premium plans honour it; a Dedicated plan ignores it.
+    // Raise or remove it before any real load test, or you will be measuring
+    // this ceiling rather than the code.
+    app_scale_limit = 5
+
     application_stack {
       // The worker runs the .NET version named here. It must match the
       // <TargetFramework> in order-api-function.csproj, or the host starts a
