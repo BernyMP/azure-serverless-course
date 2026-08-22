@@ -74,7 +74,7 @@ resource "azurerm_linux_function_app" "order-api-func" {
       // The worker runs the .NET version named here. It must match the
       // <TargetFramework> in order-api-function.csproj, or the host starts a
       // runtime the published assemblies cannot load.
-      dotnet_version = "10.0"
+      dotnet_version = "8.0"
 
       // The isolated worker model runs our code in its own process, separate
       // from the Functions host, which is what Program.cs builds with
