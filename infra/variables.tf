@@ -20,11 +20,7 @@ variable "monthly_budget_amount" {
   type        = number
   default     = 5
 
-  // This stack should sit near zero: the Y1 plan has no idle charge, and the
-  // Functions and Log Analytics free grants cover a course workload. 5 is
-  // therefore set low on purpose -- high enough not to cry wolf over a few
-  // cents of storage, low enough that anything genuinely unexpected trips it
-  // early. Azure rejects a budget amount below 1.
+  // Set low on purpose: this stack should sit near zero, so anything unexpected trips it early.
   validation {
     condition     = var.monthly_budget_amount >= 1
     error_message = "Azure requires a budget amount of at least 1."
