@@ -8,7 +8,14 @@ resource "azurerm_service_plan" "my_plan" {
   location            = var.location
   os_type             = "Linux"
   resource_group_name = azurerm_resource_group.main.name
-  sku_name            = "Y1"
+
+  // FC1 is the Flex Consumption plan (the successor to Y1 Classic
+  // Consumption). Like Y1 it bills per execution and scales to zero when
+  // idle, but it adds per-app instance-count/memory controls and a faster
+  // cold start. One structural difference from Y1: a Flex plan hosts
+  // exactly ONE function app, so a second function app needs its own plan
+  // rather than reusing this one.
+  sku_name = "FC1"
 }
 
 // storage account name must be lowercase letters and numbers
@@ -29,4 +36,14 @@ resource "azurerm_storage_account" "main" {
 
   // Reject anything older than TLS 1.2 on the wire.
   min_tls_version = "TLS1_2"
+}
+
+// Flex Consumption apps deploy from a blob container (the "one deploy"
+// model): the CI pipeline uploads the published zip here and the platform
+// runs the app from it. This replaces the Y1-era zip-push into the app's
+// own file share, so each function app gets a container like this one.
+resource "azurerm_storage_container" "deployments" {
+  name                  = "app-deployments"
+  storage_account_id    = azurerm_storage_account.main.id
+  container_access_type = "private"
 }

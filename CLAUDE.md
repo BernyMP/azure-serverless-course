@@ -26,11 +26,11 @@ There is no test suite, build step, or linter beyond `terraform fmt` / `validate
 
 Single flat Terraform root module in `infra/` (no submodules). Files are split by purpose rather than by resource type:
 
-- `provider.tf` — azurerm `~> 3.0`, `features {}`.
+- `provider.tf` — azurerm `~> 4.0`, `features {}`.
 - `backend.tf` — remote state in an Azure Storage blob (`serverless-rg` / `tfstateserverless0508` / container `tfstate`). This storage account was created **manually, outside Terraform**, and is not managed by this configuration. The blob lease acts as the state lock, preventing concurrent applies.
 - `variables.tf` — `project_name` (`order-system`), `environment` (`dev`), `location` (`westus3`). Everything has a default, so no `.tfvars` file is needed.
-- `main.tf` — shared foundation: resource group, Linux consumption service plan (`Y1`), and the storage account backing the function apps.
-- `function-app-order-api.tf` — one file per function app. Holds the Linux function app plus its Application Insights instance and the shared Log Analytics workspace.
+- `main.tf` — shared foundation: resource group, Linux Flex Consumption service plan (`FC1`), the storage account backing the function apps, and the blob container that Flex deploys app packages from.
+- `function-app-order-api.tf` — one file per function app. Holds the Flex Consumption function app (`azurerm_function_app_flex_consumption`) plus its Application Insights instance and the shared Log Analytics workspace.
 - `outputs.tf` — resource group name and function app hostname.
 
 ### Naming convention
@@ -41,7 +41,7 @@ Azure storage account and function app names are globally unique across all of A
 
 ### Adding a new function app
 
-Create a new `function-app-<name>.tf` that reuses `azurerm_resource_group.main`, `azurerm_service_plan.my_plan`, `azurerm_storage_account.main`, and `azurerm_log_analytics_workspace.main`, and adds its own `azurerm_application_insights` instance.
+Create a new `function-app-<name>.tf` that reuses `azurerm_resource_group.main`, `azurerm_storage_account.main`, and `azurerm_log_analytics_workspace.main`, and adds its own `azurerm_application_insights` instance. A Flex Consumption plan hosts exactly one function app, so each new app also needs its own `azurerm_service_plan` (sku `FC1`) and its own deployment blob container — `azurerm_service_plan.my_plan` and `azurerm_storage_container.deployments` belong to the order-api app and cannot be shared.
 
 ## Conventions
 

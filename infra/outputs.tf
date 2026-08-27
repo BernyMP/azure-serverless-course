@@ -3,5 +3,5 @@ output "resource_group_name" {
 }
 
 output "order_api_function_url" {
-  value = azurerm_linux_function_app.order-api-func.default_hostname
+  value = azurerm_function_app_flex_consumption.order-api-func.default_hostname
 }
